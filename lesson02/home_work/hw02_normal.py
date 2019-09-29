@@ -7,16 +7,16 @@ __author__ = 'Насонов Алексей Сергеевич'
 # если такой корень вообще можно извлечь
 # Пример: Дано: [2, -5, 8, 9, -25, 25, 4]   Результат: [3, 5, 2]
 
-# print("Задача-1:")
-# NumList1 = [1, 2, 3, 4, 5, -10, 25]
-# NumList2 = []
-# import math
-# for Num in NumList1:
-#     if Num >= 0:
-#         Res = math.sqrt(Num)
-#         if (float(Res) % 1) == 0:
-#             NumList2.append(int(Res))
-# print(NumList2)
+print("Задача-1:")
+NumList1 = [1, 2, 3, 4, 5, -10, 25]
+NumList2 = []
+import math
+for Num in NumList1:
+    if Num >= 0:
+        Res = math.sqrt(Num)
+        if (float(Res) % 1) == 0:
+            NumList2.append(int(Res))
+print(NumList2)
 
 # Задача-2: Дана дата в формате dd.mm.yyyy, например: 02.11.2013.
 # Ваша задача вывести дату в текстовом виде, например: второе ноября 2013 года.
@@ -79,13 +79,14 @@ print("Дата: {0} {1} {2} года".format(days[D-1],month[M-1],Y))
 # Подсказка:
 # для получения случайного числа используйте функцию randint() модуля random
 
-# print("Задача-3")
-# import random
-# NumList = []
-# n = int(input("Введите количество элементов списка случайных значений"))
-# for item in range(n):
-#     NumList.append(random.randint(-100, 100))
-# print(NumList)
+print("Задача-3")
+import random
+NumList = []
+# Задаем количество элементов списка случайных значений
+n = 10
+for item in range(n):
+    NumList.append(random.randint(-100, 100))
+print(NumList)
 
 # Задача-4: Дан список, заполненный произвольными целыми числами.
 # Получите новый список, элементами которого будут: 
@@ -99,6 +100,11 @@ NumList1 = [1, 2, 4, 5, 6, 2, 5, 2]
 NumList_a = []
 NumList_b = []
 NumList_temp = NumList1.copy()
+# Выполняем проверку первого элемента и удаляем его,
+# если элемент встречается в исходном списке несколько раз,
+# то заносим его только в новый список NumList_a
+# если элемент встречается в исходном списке только один раз,
+# то добавляем его в списки NumList_a, NumList_b
 while NumList_temp:
     Num = NumList_temp[0]
     NumList_temp.remove(Num)
