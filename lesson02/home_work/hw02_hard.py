@@ -120,3 +120,4 @@ print("Смещение квартиры справа", int(RightOffset))
 print("\nРЕШЕНИЕ:")
 print("Искомый этаж:", int(MaxEtag-DeltaEtag))
 print("Номер квартиры на этаже слева:", int(n-RightOffset))
+
