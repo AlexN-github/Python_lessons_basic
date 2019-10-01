@@ -12,9 +12,18 @@ def fibonacci(n, m):
 
 
 def sort_to_max(origin_list):
-    pass
+    for i in range(len(origin_list)):
+        for j in range(i+1,len(origin_list)):
+            if origin_list[i] > origin_list[j]:
+                temp_= origin_list[i]
+                origin_list[i] = origin_list[j]
+                origin_list[j] = temp_
+    return origin_list
+            #print(i,j)
+            # print(origin_list[i])
 
-sort_to_max([2, 10, -12, 2.5, 20, -11, 4, 4, 0])
+
+print(sort_to_max([2, 10, -12, 2.5, 20, -11, 4, 4, 0]))
 
 # Задача-3:
 # Напишите собственную реализацию стандартной функции filter.
