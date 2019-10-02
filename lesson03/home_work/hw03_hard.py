@@ -10,6 +10,52 @@
 # Вывод: 1 1/3
 
 
+
+def parsing_num(num):
+    #Проверяем на отрицательность
+    Otric = False
+    if num[0] == '-':
+        Otric = True
+        num = num[1:]
+    l = num.split()
+    R = 0
+    for item in l:
+        if len(item.split("/")) >1:
+            chislit = item.split("/")[0]
+            znamen = item.split("/")[1]
+            item = int(chislit)/int(znamen)
+        R += float(item)
+    if Otric == True:
+        R = -R
+    #print(R)
+    return R
+
+
+#Тело программы***********************************************
+Operations = ["+", "-"]
+formula = "-2 5/6 - -4 4/7"
+for Operation in Operations:
+    Operands = formula.split(" {} ".format(Operation))
+    if len(Operands) > 1:
+        break
+
+else:
+    print("Строка не соответсвует формату")
+    exit()
+Res = 0
+for i,Operand in enumerate(Operands):
+    if i == 0:
+        Res = parsing_num(Operand)
+    else:
+        if Operation == "+":
+            Res += parsing_num(Operand)
+        elif Operation == "-":
+            Res -= parsing_num(Operand)
+    print("Операнд {}:".format(i+1),round(parsing_num(Operand), 3))
+
+print("Результат:",round(Res, 3))
+
+
 # Задание-2:
 # Дана ведомость расчета заработной платы (файл "data/workers").
 # Рассчитайте зарплату всех работников, зная что они получат полный оклад,
