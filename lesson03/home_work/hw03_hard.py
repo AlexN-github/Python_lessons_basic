@@ -9,7 +9,7 @@
 # Ввод: -2/3 - -2
 # Вывод: 1 1/3
 
-
+print("\nЗадание-1")
 
 def parsing_num(num):
     #Проверяем на отрицательность
@@ -64,6 +64,60 @@ print("Результат:",round(Res, 3))
 # они получают удвоенную ЗП, пропорциональную норме.
 # Кол-во часов, которые были отработаны, указаны в файле "data/hours_of"
 
+print("\nЗадание-2")
+
+import os
+def Search_HourseOf(Worker):
+    for item in ListHourseOf:
+        if (item["Имя"] == Worker["Имя"] and item["Фамилия"] == Worker["Фамилия"]):
+            return item
+def Calculate_ZP(Stavka, Norma, Otrabotano):
+    StoimostChasa = Stavka / Norma
+    if Otrabotano > Norma:
+        Pererabotka = Otrabotano - Norma
+        return(Stavka+Pererabotka*2*StoimostChasa)
+    elif Otrabotano < Norma:
+        Nedorabotka = Norma - Otrabotano
+        return(Stavka-Nedorabotka*StoimostChasa)
+    else:
+        return(Stavka)
+
+
+def Parcing_file(DIR, FileName):
+    List_Data = []
+    with open(os.path.join(DIR, FileName), 'r', encoding='UTF-8') as f:
+        for i, line in enumerate(f):  # считываем файл построчно
+            #Первую строку парсим как заголовок
+            if i == 0:
+                header = line.split()
+            else:
+                #Все остальные строки парсим с данными
+                d ={}
+                data_line = line.split()
+                for j, item in enumerate(header):
+                    if j < len(data_line):
+                        d[item] = data_line[j]
+                    else:
+                        d[item] = ""
+                List_Data.append(d)
+    return List_Data
+
+
+
+DIR = "data"
+FileName_Workers = "workers"
+FileName_HourseOf = "hours_of"
+ListWorkers = Parcing_file(DIR,FileName_Workers)
+# print(ListWorkers)
+ListHourseOf = Parcing_file(DIR,FileName_HourseOf)
+# print(ListHourseOf)
+print("Начислено ЗП:")
+for Worker in ListWorkers:
+    Otrabotano = float(Search_HourseOf(Worker)["Отработано_часов"])
+    Norma = float(Worker["Норма_часов"])
+    Stavka = float(Worker["Зарплата"])
+    print(Worker["Фамилия"], Worker["Имя"], round(Calculate_ZP(Stavka, Norma, Otrabotano),2))
+
 
 # Задание-3:
 # Дан файл ("data/fruits") со списком фруктов.
@@ -77,3 +131,29 @@ print("Результат:",round(Res, 3))
 # Подсказка:
 # Чтобы получить список больших букв русского алфавита:
 # print(list(map(chr, range(ord('А'), ord('Я')+1))))
+
+print("\nЗадание-3")
+
+def Parcing_file(DIR, FileName):
+    List_Data = []
+    with open(os.path.join(DIR, FileName), 'r', encoding='UTF-8') as f:
+        for line in f:  # считываем файл построчно
+            if line != "\n":
+                List_Data.append(line.replace("\n",""))
+    return List_Data
+
+def WriteFile(NameFruit):
+    FileName = "fruits_"+NameFruit[0]
+    with open(os.path.join(DIR, FileName), 'a', encoding='UTF-8') as f:
+        f.writelines(NameFruit+"\n")
+
+
+DIR = "data"
+FileName_fruits = "fruits.txt"
+Listfruits = Parcing_file(DIR, FileName_fruits)
+for fruit in Listfruits:
+    WriteFile(fruit)
+print("Выполнено")
+
+
+
