@@ -73,8 +73,34 @@ class ravtrapetc:
         self.__get_abc()
     def verify(self):
         'Если стороны A и B параллельны, а углы сторон C с онованием трапеции равны'
-        
-        pass
+        def Vetify_Parallel(self):
+            if self.p1["x"] != self.p4["x"]:
+                A1 = (self.p1["y"] - self.p4["y"]) / (self.p1["x"] - self.p4["x"])
+            else:
+                A1 = 0
+            if self.p2["x"] != self.p3["x"]:
+                A2 = (self.p2["y"] - self.p3["y"]) / (self.p2["x"] - self.p3["x"])
+            else:
+                A2 = 0
+            if A1 == A2:
+                return True
+            else:
+                return False
+        def Vetify_equality_angles(self):
+            import math
+            angles1 = (((self.p1["x"]-self.p2["x"])**2)+((self.p1["y"]-self.p2["y"])**2)+((self.p1["x"]-self.p4["x"])**2)+((self.p1["y"]-self.p4["y"])**2)-((self.p2["x"]-self.p4["x"])**2)-((self.p2["y"]-self.p4["y"])**2))/(2*math.sqrt(((self.p1["x"]-self.p2["x"])**2)+((self.p1["y"]-self.p2["y"])**2))*math.sqrt(((self.p1["x"]-self.p4["x"])**2)+((self.p1["y"]-self.p4["y"])**2)))
+            angles2 = (((self.p4["x"]-self.p3["x"])**2)+((self.p4["y"]-self.p3["y"])**2)+((self.p4["x"]-self.p1["x"])**2)+((self.p4["y"]-self.p1["y"])**2)-((self.p3["x"]-self.p1["x"])**2)-((self.p3["y"]-self.p1["y"])**2))/(2*math.sqrt(((self.p4["x"]-self.p3["x"])**2)+((self.p4["y"]-self.p3["y"])**2))*math.sqrt(((self.p4["x"]-self.p1["x"])**2)+((self.p4["y"]-self.p1["y"])**2)))
+            if angles1 == angles2:
+                return True
+            else:
+                return False
+
+        if Vetify_Parallel(self) and Vetify_equality_angles(self):
+            return True
+
+
+
+
     def calculate_perimeter(self):
         perimeter = self.A+self.B+2*self.C
         return perimeter
@@ -83,24 +109,20 @@ class ravtrapetc:
         area = (self.A+self.B)/2*math.sqrt(self.C**2 - (self.A-self.B)**2/4)
         return area
 
-p1 = {"x": 5,
-      "y": 7}
-p2 = {"x": 3,
-      "y": 4}
-p3 = {"x": 6,
+p1 = {"x": 1,
       "y": 1}
-p4 = {"x": 6,
-      "y": 2}
+p2 = {"x": 2,
+      "y": 7}
+p3 = {"x": 7,
+      "y": 7}
+p4 = {"x": 8,
+      "y": 1}
 
 
 
 trap = ravtrapetc(p1,p2,p3,p4)
+print("Это равнобедренная тропеция?:", trap.verify())
 print("Площадь:", trap.calculate_area())
 print("Стороны: A= {}, B= {}, C= {}".format(trap.A, trap.B, trap.C))
 print("Периметр:", trap.calculate_perimeter())
 
-#from collections import Counter
-#counter = Counter(y)
-#print(counter.values())
-#print(counter)
-#print([i for i in y if y[i]>1])
