@@ -57,3 +57,74 @@
 модуль random: http://docs.python.org/3/library/random.html
 
 """
+
+class Meshok():
+    def __init__(self):
+        self.vsego_bochenok = 90
+        self._list_bochenok = [i for i in range(1,self.vsego_bochenok+1)]
+    def get_bochenok(self):
+        if self.get_ostalos() > 0:
+            import random
+            number = random.randint(1, len(self._list_bochenok))
+            bochenok = self._list_bochenok[number-1]
+            self._list_bochenok.remove(bochenok)
+            return bochenok
+        else:
+            print("Мешок пуст")
+    def get_ostalos(self):
+        return len(self._list_bochenok)
+
+class Kartochka():
+    def __init__(self,name,vsego_bochenok):
+        self.vsego_bochenok = vsego_bochenok
+        self.name = name
+        self._matrix_3x9 = []
+        self.fill_matrix_3x9()
+    def fill_matrix_3x9(self):
+        import random
+        for i in range(3):
+            self._matrix_3x9.append([0 for x in range(9)])
+            list_number = sorted(random.sample(range(self.vsego_bochenok+1),5))
+            for inx,x in enumerate(sorted(random.sample(range(1,10),5))):
+                self._matrix_3x9[i][x-1] = list_number[inx]
+    def draw(self):
+        prefix = '-' * int((24-len(self.name))/2)
+        sufix = "-" * (28 - len(self.name)-len(prefix) - 4)
+        print(prefix,self.name,sufix)
+        for i in range(3):
+            l = [str(x) for x in self._matrix_3x9[i]]
+            print((', '.join([x if len(x) != 1 else " "+x for x in l]).replace(',', '').replace(' 0', '  ')))
+        print('-'*26)
+            #print(self._matrix_3x9[i])
+            #print([len(x) for x in l])
+
+class Kartochka_Computer(Kartochka):
+    def __init__(self,vsego_bochenok):
+        self.name = "Карточка компьютера"
+        super().__init__(self.name,vsego_bochenok)
+
+class Kartochka_Gamer(Kartochka):
+    def __init__(self,vsego_bochenok):
+        self.name = "Карточка игрока"
+        super().__init__(self.name,vsego_bochenok)
+
+class Game():
+    def __init__(self):
+        self.Meshok_ = Meshok()
+        self.Kartochka_Computer_ = Kartochka_Computer(self.Meshok_.vsego_bochenok)
+        self.Kartochka_Gamer_ = Kartochka_Gamer(self.Meshok_.vsego_bochenok)
+    def Output(self):
+        print("Новый бочонок: {0} (осталось {1})".format(self.Meshok_.get_bochenok(), self.Meshok_.get_ostalos()))
+        self.Kartochka_Computer_.draw()
+        self.Kartochka_Gamer_.draw()
+        print("Зачеркнуть цифру? (y/n)")
+    def run(self):
+        self.Output()
+
+
+
+
+Game_ = Game()
+Game_.run()
+
+
