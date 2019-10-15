@@ -117,9 +117,10 @@ class Game():
         print("Новый бочонок: {0} (осталось {1})".format(self.Meshok_.get_bochenok(), self.Meshok_.get_ostalos()))
         self.Kartochka_Computer_.draw()
         self.Kartochka_Gamer_.draw()
-        print("Зачеркнуть цифру? (y/n)")
     def run(self):
-        self.Output()
+        while True:
+            self.Output()
+            input("Зачеркнуть цифру? (y/n)")
 
 
 
