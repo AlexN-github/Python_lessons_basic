@@ -60,6 +60,7 @@
 
 class Meshok():
     def __init__(self):
+        self.current_bochenok = None
         self.vsego_bochenok = 90
         self._list_bochenok = [i for i in range(1,self.vsego_bochenok+1)]
     def get_bochenok(self):
@@ -68,6 +69,7 @@ class Meshok():
             number = random.randint(1, len(self._list_bochenok))
             bochenok = self._list_bochenok[number-1]
             self._list_bochenok.remove(bochenok)
+            self.current_bochenok = bochenok
             return bochenok
         else:
             print("Мешок пуст")
@@ -87,13 +89,30 @@ class Kartochka():
             list_number = sorted(random.sample(range(self.vsego_bochenok+1),5))
             for inx,x in enumerate(sorted(random.sample(range(1,10),5))):
                 self._matrix_3x9[i][x-1] = list_number[inx]
+    def close_cell(self,listcell):
+        for cell in listcell:
+            self._matrix_3x9[cell[0]][cell[1]] = -1
+    def get_List_closecell(self,current_bochenok):
+        Res = []
+        for inx,row in enumerate(self._matrix_3x9):
+            try:
+                col = row.index(current_bochenok)
+                Res.append((inx,col))
+            except Exception:
+                pass
+        return Res
+    def verify_end(self):
+        L = []
+        for item in self._matrix_3x9:
+            L += [x for x in item if x > 0 ]
+        return len(L) == 0
     def draw(self):
         prefix = '-' * int((24-len(self.name))/2)
         sufix = "-" * (28 - len(self.name)-len(prefix) - 4)
         print(prefix,self.name,sufix)
         for i in range(3):
             l = [str(x) for x in self._matrix_3x9[i]]
-            print((', '.join([x if len(x) != 1 else " "+x for x in l]).replace(',', '').replace(' 0', '  ')))
+            print((', '.join([x if len(x) != 1 else " "+x for x in l]).replace(',', '').replace(' 0', '  ').replace('-1', ' -')))
         print('-'*26)
             #print(self._matrix_3x9[i])
             #print([len(x) for x in l])
@@ -113,16 +132,76 @@ class Game():
         self.Meshok_ = Meshok()
         self.Kartochka_Computer_ = Kartochka_Computer(self.Meshok_.vsego_bochenok)
         self.Kartochka_Gamer_ = Kartochka_Gamer(self.Meshok_.vsego_bochenok)
-    def Output(self):
-        print("Новый бочонок: {0} (осталось {1})".format(self.Meshok_.get_bochenok(), self.Meshok_.get_ostalos()))
+    def output(self):
+        print('\n' * 80)
+        print("Новый бочонок: {0} (осталось {1})".format(self.Meshok_.current_bochenok, self.Meshok_.get_ostalos()))
         self.Kartochka_Computer_.draw()
         self.Kartochka_Gamer_.draw()
+    def input_gamer(self):
+        while True:
+            request = input("Зачеркнуть цифру? (y/n)\n>>")
+            if request in ["y","Y"]:
+                break
+            elif request in ["n","N"]:
+                return "Skip"
+            self.output()
+        while True:
+            try:
+                resp_str = input("Введите номера позиций на карточке в формате (i1,j1), (i2,j2), ... - где i1-номер строки, "
+                                "j1 - номер столбца в карточке. Номера начинаются с 1 \n>>")
+                #Преобразуем введенную строку в список кортежей, где кортеж - координаты поля
+                s = resp_str[1:][:-1].split("),(")
+                resp = [tuple([int(y)-1 for y in x.split(",")]) for x in s]
+                return resp
+            except Exception as e:
+                print("Ошибка ввода, для продолжения нажмите Enter.\n",e)
+                input()
+            self.output()
+
+
+    def verify_end(self):
+        res_comp = self.Kartochka_Computer_.verify_end()
+        res_gamer = self.Kartochka_Gamer_.verify_end()
+        if res_comp and res_gamer:
+            print("У вас ничья. Игра окончена")
+            exit()
+        elif res_comp:
+            print("Вы проиграли, ваш аппонент закрыл карточку нраньше вас")
+            exit()
+        elif res_gamer:
+            print("Поздравляем, вы победили")
+            exit()
+
     def run(self):
         while True:
-            self.Output()
-            input("Зачеркнуть цифру? (y/n)")
+            self.verify_end()
+            self.Meshok_.get_bochenok()
+            list_closecell_computer = self.Kartochka_Computer_.get_List_closecell(self.Meshok_.current_bochenok)
+            self.Kartochka_Computer_.close_cell(list_closecell_computer)
+            self.output()
+            list_closecell_gamer = self.input_gamer()
+            true_list_closecell_gamer = self.Kartochka_Gamer_.get_List_closecell(self.Meshok_.current_bochenok)
+            if list_closecell_gamer == "Skip":
+                #если пользователь пропустил ход, то проверяем что правильных ответов действительно нет
+                if len(true_list_closecell_gamer) == 0:
+                    continue
+                else:
+                    self.output()
+                    print("К сожлению вы произрали. Правильный ответ:\n",true_list_closecell_gamer)
+                    exit()
+            else:
+                #если пользователь ввел ячейки, то проверяем, что его ответ правильный
+                if sorted(true_list_closecell_gamer) == sorted(list_closecell_gamer):
+                    self.Kartochka_Gamer_.close_cell(list_closecell_gamer)
+                else:
+                    self.output()
+                    if len(true_list_closecell_gamer) == 0:
+                        print("К сожлению вы произрали. Такого номера боченка не было на вашей карточке")
+                    else:
+                        print("К сожлению вы произрали. Правильный ответ:\n",[(item[0]+1,item[1]+1) for item in true_list_closecell_gamer])
+                    exit()
 
-
+            #input("Введите Enter чтобы продолжить")
 
 
 Game_ = Game()
